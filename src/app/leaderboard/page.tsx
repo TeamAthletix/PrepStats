@@ -1,8 +1,3 @@
-// ===================
-// File: src/app/leaderboard/page.tsx
-// Phase 2 core MVP: Leaderboard (simplified read-only view for MVP)
-// ===================
-
 'use client'
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabaseClient'
@@ -18,7 +13,6 @@ export default function Leaderboard() {
       setLoading(true)
       const { data, error } = await supabase.from('stat_entries')
         .select('athlete_user_id, metric_name, value, game_id, verified')
-        // MVP placeholder: you'd aggregate server-side; this is a scaffold
         .limit(50)
       if (!error) setData(data || [])
       setLoading(false)
@@ -35,18 +29,14 @@ export default function Leaderboard() {
           <option value="flag">Girls Flag Football</option>
         </select>
         <select value={state} onChange={e => setState(e.target.value)} className="rounded bg-brand-charcoal p-2 border border-brand-gray">
-          {['AL','GA','FL'].map(s => (
-            <option key={s} value={s}>{s}</option>
-          ))}
+          {['AL','GA','FL'].map(s => <option key={s} value={s}>{s}</option>)}
         </select>
       </div>
       {loading && <div>Loading leaderboard...</div>}
       <ul className="list-disc pl-6">
         {data.length === 0 && <li className="text-brand-gray">No data yet.</li>}
         {data.map((row, i) => (
-          <li key={i}>
-            Athlete #{row.athlete_user_id} — {row.value ?? 0} {row.metric_name}
-          </li>
+          <li key={i}>Athlete #{row.athlete_user_id} — {row.value ?? 0} {row.metric_name}</li>
         ))}
       </ul>
     </div>

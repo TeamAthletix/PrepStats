@@ -1,8 +1,3 @@
-// ===================
-// File: scripts/import-alabama-schools.ts
-// Alabama seed data importer (Phase 2)
-// ===================
-
 import fs from 'fs'
 import path from 'path'
 import { createClient } from '@supabase/supabase-js'
@@ -23,7 +18,6 @@ async function main() {
       state: 'AL',
       city: row.city?.trim() || null,
       county: row.county?.trim() || null,
-      mascot: row.mascot?.trim() || null,
       classification: row.classification?.trim() || null,
       status: 'active',
       source: 'csv-import',
