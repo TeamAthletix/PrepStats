@@ -5,14 +5,22 @@ import Script from 'next/script';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
+declare global {
+  interface Window {
+    gtag: (...args: any[]) => void;
+  }
+}
+
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
-      window.gtag('config', 'G-MEFY4NEWQN', {
-        page_path: url,
-      });
+      if (typeof window.gtag === 'function') {
+        window.gtag('config', 'G-MEFY4NEWQN', {
+          page_path: url,
+        });
+      }
     };
     router.events.on('routeChangeComplete', handleRouteChange);
     return () => {
@@ -33,6 +41,7 @@ export default function App({ Component, pageProps }: AppProps) {
           __html: `
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
+            window.gtag = gtag;
             gtag('js', new Date());
             gtag('config', 'G-MEFY4NEWQN', {
               page_path: window.location.pathname,
