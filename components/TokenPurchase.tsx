@@ -1,9 +1,8 @@
-// components/TokenPurchase.tsx
 import { initiateCheckout } from '@/utils/checkout';
 
 export default function TokenPurchase({ userId }: { userId: string }) {
   const handlePurchase = () => {
-    initiateCheckout(userId, 500, 100); // $5 for 100 tokens
+    initiateCheckout(userId, 5, 100); // $5 for 100 tokens
   };
 
   return (

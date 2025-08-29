@@ -1,4 +1,3 @@
-// utils/checkout.ts
 import { stripePromise } from '@/lib/stripe';
 
 export async function initiateCheckout(userId: string, amountUsd: number, tokens: number) {
