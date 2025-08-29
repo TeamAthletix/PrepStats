@@ -8,7 +8,7 @@ export default function TokenPurchase({ userId }: { userId: string }) {
 
   return (
     <button onClick={handlePurchase} className="bg-blue-600 text-white px-4 py-2 rounded">
-      Buy 100 Tokens – $5
+      Buy 100 Tokens 🪙 $5
     </button>
   );
 }
