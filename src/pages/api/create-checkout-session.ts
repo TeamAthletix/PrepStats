@@ -1,9 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import Stripe from 'stripe'
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2022-11-15',
-})
+import stripe from '../../lib/stripeServer'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -36,14 +32,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           quantity: tokens,
         },
       ],
+      metadata: { userId },
       success_url: `${req.headers.origin}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.headers.origin}/cancel`,
-      metadata: { userId, tokens: String(tokens) },
+      cancel_url: `${req.headers.origin}/cancel`
     })
 
-    res.status(200).json({ sessionId: session.id })
-  } catch (err) {
-    console.error('Checkout session creation failed', err)
-    res.status(500).json({ error: 'Internal Server Error' })
+    return res.status(200).json({ sessionId: session.id })
+  } catch (error: any) {
+    console.error('Stripe error:', error)
+    return res.status(500).json({ error: error.message || 'Internal Server Error' })
   }
 }
