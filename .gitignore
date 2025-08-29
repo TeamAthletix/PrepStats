@@ -1,0 +1,6 @@
+.env.local
+.vercel
+
+/generated/prisma
+node_modules/
+stripe.tar.gz

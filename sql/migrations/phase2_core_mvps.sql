@@ -1,0 +1,2 @@
+-- Phase 2 MVP schema setup
+-- (Insert full SQL migration content here)

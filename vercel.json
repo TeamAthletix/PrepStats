@@ -1,0 +1,17 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/onboard" }
+  ],
+  "redirects": [
+    {
+      "source": "/prepstats.live",
+      "destination": "https://prepstats.online",
+      "permanent": true
+    },
+    {
+      "source": "/prepstats.me",
+      "destination": "https://prepstats.online",
+      "permanent": true
+    }
+  ]
+}
