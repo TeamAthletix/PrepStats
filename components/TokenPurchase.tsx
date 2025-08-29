@@ -1,13 +1,24 @@
 import { initiateCheckout } from '@/utils/checkout';
 
-export default function TokenPurchase({ userId }: { userId: string }) {
+type Props = {
+  userId: string;
+};
+
+export default function TokenPurchase({ userId }: Props) {
   const handlePurchase = () => {
-    initiateCheckout(userId, 5, 100); // $5 for 100 tokens
+    // Example: 100 tokens for $5
+    initiateCheckout(userId, 5, 100).catch((err) => {
+      // Optional: show a user notification
+      console.error('Checkout failed:', err);
+    });
   };
 
   return (
-    <button onClick={handlePurchase} className="bg-blue-600 text-white px-4 py-2 rounded">
-      Buy 100 Tokens 🪙 $5
+    <button
+      onClick={handlePurchase}
+      className="bg-blue-600 text-white px-4 py-2 rounded"
+    >
+      Buy 100 Tokens 💳 $5
     </button>
   );
 }
