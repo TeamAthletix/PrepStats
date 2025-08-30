@@ -4,7 +4,7 @@
   ],
   "redirects": [
     {
-      "source": "/prepstats.live",
+      "source": "/prepstats.online",
       "destination": "https://prepstats.online",
       "permanent": true
     },

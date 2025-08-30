@@ -23,8 +23,8 @@ export async function POST() {
       },
     ],
     mode: 'payment',
-    success_url: 'https://prepstats.live/success',
-    cancel_url: 'https://prepstats.live/cancel',
+    success_url: 'https://prepstats.online/success',
+cancel_url: 'https://prepstats.online/cancel',
     metadata: {
       user_id: 'test_user', // Replace with dynamic user ID
     },
