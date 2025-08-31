@@ -1,27 +1,33 @@
-// pages/_app.tsx
-
+/ File: pages/_app.tsx
 import type { AppProps } from 'next/app';
 import Script from 'next/script';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { GA_MEASUREMENT_ID, pageview, initGtagIfNeeded } from '@/lib/gtag';
 
 declare global {
   interface Window {
-    gtag: (...args: any[]) => void;
+    gtag?: (...args: any[]) => void;
+    dataLayer?: any[];
   }
 }
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
+  // Initialize GA once on first load
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    initGtagIfNeeded();
+    pageview(window.location.pathname + window.location.search);
+  }, []);
+
+  // Track route changes for GA4
   useEffect(() => {
     const handleRouteChange = (url: string) => {
-      if (typeof window.gtag === 'function') {
-        window.gtag('config', 'G-MEFY4NEWQN', {
-          page_path: url,
-        });
-      }
+      pageview(url);
     };
+
     router.events.on('routeChangeComplete', handleRouteChange);
     return () => {
       router.events.off('routeChangeComplete', handleRouteChange);
@@ -32,7 +38,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <Script
         strategy="afterInteractive"
-        src="https://www.googletagmanager.com/gtag/js?id=G-MEFY4NEWQN"
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
       />
       <Script
         id="gtag-init"
@@ -43,8 +49,8 @@ export default function App({ Component, pageProps }: AppProps) {
             function gtag(){dataLayer.push(arguments);}
             window.gtag = gtag;
             gtag('js', new Date());
-            gtag('config', 'G-MEFY4NEWQN', {
-              page_path: window.location.pathname,
+            gtag('config', '${GA_MEASUREMENT_ID}', {
+              page_path: window.location.pathname + window.location.search
             });
           `,
         }}
