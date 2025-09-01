@@ -1,13 +1,8 @@
-import React from "react";
-
 export default function Home() {
   return (
-    <main style={{ textAlign: "center", marginTop: "3rem" }}>
-      <h1>Welcome to PrepStats!</h1>
-      <p>Your homepage is working.</p>
-      <p>
-        Next steps: add registration/login links or forms here!
-      </p>
-    </main>
+    <div style={{ color: "#b3a369", textAlign: "center", marginTop: "2rem" }}>
+      <h1>PrepStats Homepage</h1>
+      <p>Welcome! Your Next.js app is running.</p>
+    </div>
   );
 }
