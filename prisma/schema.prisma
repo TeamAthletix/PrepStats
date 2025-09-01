@@ -1,12 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -14,11 +7,68 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Coach {
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  password     String
+  name         String?
+  role         Role     @default(ATHLETE)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  stats        Stat[]
+  awards       Award[]
+  media        Media[]
+  leaderboardEntries LeaderboardEntry[]
+}
+
+enum Role {
+  ATHLETE
+  COACH
+  PARENT
+  MEDIA
+  ORG
+  ADMIN
+}
+
+model Stat {
   id        String   @id @default(uuid())
-  name      String
-  team      String
-  email     String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  sport     String
+  season    String?
+  value     Float
+  metric    String
+  verified  Boolean  @default(false)
   createdAt DateTime @default(now())
 }
 
+model Award {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  title     String
+  description String?
+  awardedBy String
+  date      DateTime @default(now())
+}
+
+model LeaderboardEntry {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  sport     String
+  metric    String
+  rank      Int
+  season    String?
+  createdAt DateTime @default(now())
+}
+
+model Media {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  url       String
+  type      String
+  uploadedAt DateTime @default(now())
+}

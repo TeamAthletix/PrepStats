@@ -1,97 +1,66 @@
-# 🏗️ PrepStats Architecture
+# PrepStats Architecture
 
-## 1. Tech Stack
+## Overview
 
-- **Frontend:** React 18, Next.js, TypeScript, Vite (for local dev)
-- **Backend:** Node.js, Express/NestJS (planned), TypeScript
-- **Database:** PostgreSQL (via Prisma ORM)
-- **Payments:** Stripe integration (awards, spotlights, premium features)
-- **Object Storage:** S3-compatible (images, highlights)
-- **Caching:** Redis (sessions, leaderboards, rate limiting)
-- **Hosting:** Vercel (SSL, custom domains)
-- **Analytics:** Google Analytics, Mixpanel, DataDog, Sentry
+PrepStats is a role-based SaaS platform for managing athletic statistics, awards, media uploads, and leaderboards. It supports multiple user roles, including Athlete, Coach, Parent, Media, Organization, and Admin, each with tailored dashboards and permissions.
 
----
+## Major Components
 
-## 2. Core Entities & Data Models
+- **Frontend:** Next.js (React) for dynamic dashboards, onboarding, and role-based routing.
+- **Backend API:** Node.js/TypeScript REST endpoints for authentication, stats, awards, profiles, leaderboards.
+- **Database:** Prisma ORM with PostgreSQL for robust relational data modeling (User, Profile, Stat, Award, Leaderboard, Media).
+- **Object Storage:** S3-compatible service for images, videos, and highlights.
+- **Authentication:** JWT-based, with role mapping and secure routes.
+- **Payments:** Stripe integration for award payments and premium features.
+- **Admin Tools:** Audit logs, moderation interface, user management.
+- **Analytics & Monitoring:** Google Analytics, Sentry, Mixpanel integrations.
 
-- **User** (role: Athlete, Coach, Parent, Media, Fan, Organization, Admin)
-- **Profile** (name, team, position, photo, stat history, awards, highlights)
-- **Stat** (sport, position, game/date, metrics, verification status)
-- **Award** (type, recipient, issuer, verified, promo, payment info)
-- **Leaderboard** (criteria, filters, region, sport, verified stats only)
+## Data Flow
 
-Sample Prisma type:
-```prisma
-model User {
-  id          String   @id @default(uuid())
-  email       String   @unique
-  role        String
-  profile     Profile?
-  stats       Stat[]
-  awards      Award[]
-  createdAt   DateTime @default(now())
-}
-```
+1. **User Onboarding:**  
+   - Registers and selects a role.
+   - Role stored in DB, permissions assigned.
 
----
+2. **Stat Submission:**  
+   - Athlete uploads stats.
+   - Coach/Org verifies and approves.
+   - Stats update leaderboards and can trigger awards.
 
-## 3. Routing & Page Structure
+3. **Media Upload:**  
+   - Users upload images/videos to S3.
+   - Media linked to profiles/stats.
 
-- `/` — Landing/onboarding
-- `/dashboard` — Authenticated user dashboard
-- `/player/profile` — Athlete profile
-- `/coach/roster` — Coach team management
-- `/parent/performance` — Parent analytics/dashboard
-- `/media/publish` — Media verification tools
-- `/org/analytics` — Organization metrics
-- `/admin/roles` — GOD mode/admin panel
+4. **Awards & Payments:**  
+   - Admin creates awards.
+   - Stripe handles payments for premium awards.
+   - Award status updated in DB.
 
-- `/auth/signup` — Registration
-- `/onboarding` — Role setup/redirect
+5. **Leaderboards:**  
+   - Aggregates stats by role/org/team.
+   - Filtered, sortable, and displayed on dashboards.
 
----
+## Directory Structure
 
-## 4. API Overview
+- `/pages` — Next.js routes and dashboards
+- `/api` — API endpoints (REST)
+- `/prisma` — Database schema
+- `/components` — Reusable UI elements
+- `/data` — Seed and static data
+- `/lib` — Utility functions
+- `/scripts` — Migration and setup scripts
 
-- **Authentication:** `/api/auth` (login, signup, session)
-- **Stats:** `/api/stats` (create, read, update, verify)
-- **Awards:** `/api/awards` (POW, custom, payment)
-- **Leaderboards:** `/api/leaderboards` (list, filter, region)
-- **Profile:** `/api/profile` (view, edit)
-- **Admin:** `/api/admin` (users, moderation, flags, logs)
+## Extensibility
 
----
+- Add new roles by updating DB schema and permissions.
+- Integrate new storage providers via abstraction in `/lib`.
+- Expand award/payment logic via modular API endpoints.
 
-## 5. Integration Points
+## Security
 
-- **Stripe:** For payments (custom awards, spotlights, voting)
-- **Object Storage:** For image/highlight uploads
-- **Ads:** GAM or custom ad server (geo-targeted, banner placement)
-- **Analytics:** Telemetry beacon, event tracking
+- All endpoints validate JWT and role.
+- Sensitive data is encrypted at rest.
+- Payments handled via Stripe with webhook verification.
 
 ---
 
-## 6. Deployment
-
-- **Production:** Vercel, with auto-deploy from `PrepStats-main`
-- **Environment:** `.env` for sensitive keys, `.env.save` as template
-- **Scripts:** Setup, seed, migration in `/scripts`, `/sql`
-
----
-
-## 7. Security & Compliance
-
-- **COPPA/FERPA:** Privacy for minors, PII minimization
-- **Role-based access:** Auth middleware, admin controls
-- **Audit logs:** Actions, stat changes, award issuance
-
----
-
-## 8. Monitoring & Success Metrics
-
-- Stat verification time, DAU/MAU, leaderboard engagement, conversion rates, coach retention, ad fill rate
-
----
-
-**For more details:** See [ONBOARDING.md](./ONBOARDING.md) and [README.md](./README.md)
+*For detailed onboarding and environment setup, see ONBOARDING.md.*
