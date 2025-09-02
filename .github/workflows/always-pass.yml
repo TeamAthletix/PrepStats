@@ -1,0 +1,10 @@
+name: Always Pass
+
+on: [push]
+
+jobs:
+  always_pass:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Success step
+        run: echo "This workflow always passes!"
